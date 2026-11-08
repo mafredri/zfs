@@ -123,6 +123,7 @@
 
 #define _ASM
 #include <sys/asm_linkage.h>
+#include <sys/frame.h>
 
 #if !defined(GCM128_MODE) && !defined(GCM192_MODE) && !defined(GCM256_MODE)
 #error "No GCM mode selected for gcm_sse.S!"
@@ -1915,6 +1916,7 @@ ENTRY_NP(FN_NAME(precomp,_))
 	RET
 .cfi_endproc
 SET_SIZE(FN_NAME(precomp,_))
+STACK_FRAME_NON_STANDARD FN_NAME(precomp,_)
 
 #endif	// _nt
 
@@ -1970,6 +1972,7 @@ ENTRY_NP(FN_NAME(enc,_update_))
 	RET
 .cfi_endproc
 SET_SIZE(FN_NAME(enc,_update_))
+STACK_FRAME_NON_STANDARD FN_NAME(enc,_update_)
 
 ////////////////////////////////////////////////////////////////////////////////
 // void   icp_isalc_gcm_dec_{128,192,256}_update_sse(
@@ -1995,6 +1998,7 @@ ENTRY_NP(FN_NAME(dec,_update_))
 	RET
 .cfi_endproc
 SET_SIZE(FN_NAME(dec,_update_))
+STACK_FRAME_NON_STANDARD FN_NAME(dec,_update_)
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -2079,6 +2083,7 @@ ENTRY_NP(FN_NAME(enc,_))
 	RET
 .cfi_endproc
 SET_SIZE(FN_NAME(enc,_))
+STACK_FRAME_NON_STANDARD FN_NAME(enc,_)
 
 ////////////////////////////////////////////////////////////////////////////////
 // void   icp_isalc_gcm_dec_{128,192,256}_sse(
@@ -2115,5 +2120,19 @@ ENTRY_NP(FN_NAME(dec,_))
 	RET
 .cfi_endproc
 SET_SIZE(FN_NAME(dec,_))
+STACK_FRAME_NON_STANDARD FN_NAME(dec,_)
+
+/* Workaround for missing asm macro in RHEL 8. */
+#if defined(__linux__) && defined(HAVE_STACK_FRAME_NON_STANDARD) && \
+    ! defined(HAVE_STACK_FRAME_NON_STANDARD_ASM)
+.section .discard.func_stack_frame_non_standard, "aw"
+#if FUNCT_EXTENSION != _nt
+	.long FN_NAME(precomp,_) - .
+#endif
+	.long FN_NAME(enc,_update_) - .
+	.long FN_NAME(dec,_update_) - .
+	.long FN_NAME(enc,_) - .
+	.long FN_NAME(dec,_) - .
+#endif
 
 // -eof-
