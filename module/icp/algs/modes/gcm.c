@@ -1065,11 +1065,15 @@ gcm_impl_get_ops(void)
 		ops = gcm_supp_impl[idx];
 		break;
 #ifdef CAN_USE_GCM_ASM
+#ifdef CAN_USE_GCM_ASM_SSE
+	case IMPL_SSE4_1:
+#endif
 	case IMPL_AVX:
 		/*
 		 * Make sure that we return a valid implementation while
-		 * switching to the avx implementation since there still
-		 * may be unfinished non-avx contexts around.
+		 * switching to a SIMD implementation since there still
+		 * may be unfinished non-SIMD contexts around. Contexts
+		 * the SIMD code can't handle also use these ops.
 		 */
 		ops = &gcm_generic_impl;
 		break;
