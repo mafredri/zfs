@@ -267,6 +267,16 @@ my %override_file_license_tags = (
 		module/os/linux/spl/spl-zone.c
 	)],
 
+	# GCM SSE routines ported from Intel ISA-L crypto.
+	'BSD-3-Clause' => [qw(
+		module/icp/asm-x86_64/modes/isalc_gcm128_sse.S
+		module/icp/asm-x86_64/modes/isalc_gcm192_sse.S
+		module/icp/asm-x86_64/modes/isalc_gcm256_sse.S
+		module/icp/asm-x86_64/modes/isalc_gcm_defines.S
+		module/icp/asm-x86_64/modes/isalc_gcm_sse.S
+		module/icp/asm-x86_64/modes/isalc_reg_sizes.S
+	)],
+
 	# Temporary overrides for things that have the wrong license for
 	# their path. Work is underway to understand and resolve these.
 	'GPL-2.0-or-later' => [qw(
