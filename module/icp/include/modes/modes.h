@@ -43,10 +43,11 @@ extern "C" {
 /* XXXX: does AES + PCLMULQDQ really imply at least SSE4_1? */
 #define	CAN_USE_GCM_ASM
 
-#ifdef DEBUG
-/* Defines this to the gcm_simd_impl_t to debug. */
-#define	DEBUG_GCM_ASM	GSI_ISALC_SSE
-#endif
+/*
+ * Define DEBUG_GCM_ASM to a gcm_simd_impl_t, e.g. GSI_ISALC_SSE, to run that
+ * implementation on a shadow copy of every AVX context and log differences.
+ * It asserts on IVs other than 12 bytes, which crypto_test's vectors use.
+ */
 #if defined(HAVE_SSE4_1)
 #define	CAN_USE_GCM_ASM_SSE
 #endif
